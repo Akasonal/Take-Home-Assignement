@@ -12,18 +12,9 @@ def process_data_chunk(chunk):
         progress_bar = tqdm(total=total_rows, desc="Cleaning Data", unit="row")
 
         # Perform data processing on the chunk
-        def convert_to_json(value):
-            if isinstance(value, (dict, list)):
-                return json.loads(value)
-            elif isinstance(value, float):
-                return str(value)  # Convert float to string
-            else:
-                return value
-        
-        chunk['attribute'] = chunk['attribute'].apply(convert_to_json)
+        chunk['attribute'] = chunk['attribute'].apply(json.loads)
         chunk_final = pd.concat([chunk.explode('attribute').drop(['attribute'], axis=1),
                                  chunk.explode('attribute')['attribute'].apply(pd.Series)], axis=1)
-        
         # Update the progress bar
         progress_bar.update(total_rows)
 
@@ -66,4 +57,3 @@ def main():
                 mime="text/csv")
 
 if __name__ == "__main__":
-    main()
