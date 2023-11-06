@@ -47,6 +47,7 @@ def main():
         if df_final_chunks:
             # Concatenate the processed chunks and display the result
             df_final = pd.concat(df_final_chunks)
+            af_final = df_final.pivot_table(index='ProductId', columns='Name', values='Value', aggfunc=lambda x: x).reset_index()
             st.subheader("Display the Cleaned Data")
             st.dataframe(df_final.head())
 
